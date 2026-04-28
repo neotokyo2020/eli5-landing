@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELI5 — Account</title>
+  <meta name="description" content="Sign in to use ELI5 on the web. Manage your subscription, change your password, and explain text in plain English." />
+  <link rel="icon" type="image/png" sizes="128x128" href="icon128.png" />
+  <link rel="shortcut icon" href="icon128.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6c63ff;
+      --purple-dark: #5a52e0;
+      --purple-light: #f0eeff;
+      --purple-mid: #e4e0ff;
+      --text: #1a1a1a;
+      --muted: #666;
+      --border: #e8e6ff;
+      --white: #ffffff;
+      --bg: #fafafe;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon { font-size: 24px; }
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.4px;
+    }
+    .nav-back {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-back:hover { color: var(--text); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .page-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .card-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .card-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: var(--purple-light);
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab.active {
+      background: var(--white);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ── Form ── */
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--text);
+      margin-bottom: 14px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      padding: 14px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+      color: var(--text);
+      resize: vertical;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+    textarea:disabled {
+      background: #f5f5fa;
+      cursor: not-allowed;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+      box-shadow: 0 2px 12px rgba(108,99,255,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--purple-dark);
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      background: #b8b3f0;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-secondary {
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--purple-light);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+      font-weight: 600;
+    }
+    .btn-ghost:hover {
+      color: var(--text);
+    }
+    .btn-block { width: 100%; }
+
+    /* ── Account header ── */
+    .account-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .account-email {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .account-email strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Plan badge ── */
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .plan-badge.free {
+      background: #f0f0f4;
+      color: var(--muted);
+    }
+    .plan-badge.trial {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .plan-badge.pro {
+      background: linear-gradient(135deg, #6c63ff, #8b5cf6);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(108,99,255,0.3);
+    }
+
+    /* ── Mode toggle ── */
+    .mode-toggle {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--purple-light);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+    .mode-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .mode-btn.active {
+      background: var(--white);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ── Status messages ── */
+    .status {
+      font-size: 13px;
+      margin-top: 12px;
+      min-height: 18px;
+      font-weight: 500;
+    }
+    .status.error { color: var(--red); }
+    .status.success { color: var(--green); }
+    .status.info { color: var(--purple); }
+
+    .uses-remaining {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    .uses-remaining.warn { color: var(--amber); }
+    .uses-remaining.danger { color: var(--red); }
+
+    /* ── Result ── */
+    .result-box {
+      background: var(--purple-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    /* ── Forgot link ── */
+    .forgot-link {
+      display: inline-block;
+      font-size: 13px;
+      color: var(--purple);
+      cursor: pointer;
+      margin-top: -6px;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* ── Helpers ── */
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .small { font-size: 12px; color: var(--muted); }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px 60px; }
+      .card { padding: 20px; }
+      .actions-row { flex-direction: column; }
+      .actions-row .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="nav-logo-icon">🧠</span>
+        <span class="nav-logo-text">ELI5</span>
+      </a>
+      <a href="/" class="nav-back">← Back to home</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- ─── Auth view (login/signup) ─── -->
+    <section id="auth-view">
+      <h1 class="page-title">Welcome to ELI5</h1>
+      <p class="page-sub">Sign in to use ELI5 on the web, or create an account to get started.</p>
+
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" id="tab-login">Log In</button>
+          <button class="tab" id="tab-signup">Sign Up</button>
+        </div>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+
+        <a class="forgot-link" id="forgot-link">Forgot password?</a>
+
+        <button class="btn btn-primary btn-block" id="submit-btn">Log In</button>
+
+        <div class="status" id="auth-status"></div>
+
+        <p class="small text-center" style="margin-top:14px;">
+          New accounts include a free 7-day Pro trial. No credit card needed.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── Logged-in view ─── -->
+    <section id="logged-in-view" class="hidden">
+
+      <!-- Header -->
+      <div class="account-header">
+        <div>
+          <h1 class="page-title">Your ELI5</h1>
+          <p class="account-email">Signed in as <strong id="account-email"></strong></p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="plan-badge free" id="plan-badge">Free</span>
+          <button class="btn btn-ghost" id="logout-btn">Log out</button>
+        </div>
+      </div>
+
+      <!-- Web simplify -->
+      <div class="card">
+        <h2>Explain something</h2>
+
+        <div class="mode-toggle hidden" id="mode-toggle">
+          <button class="mode-btn active" data-mode="short" id="mode-short">Short</button>
+          <button class="mode-btn" data-mode="expanded" id="mode-expanded">Detailed</button>
+        </div>
+
+        <textarea id="text-input" placeholder="Paste any text here — an article, a paragraph, a concept you don't understand…"></textarea>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px;">
+          <span class="uses-remaining hidden" id="uses-remaining"></span>
+          <button class="btn btn-primary" id="explain-btn" style="margin-left:auto;">Explain Simply</button>
+        </div>
+
+        <div class="status" id="explain-status"></div>
+
+        <div class="result-box hidden" id="result-box"></div>
+      </div>
+
+      <!-- Account / subscription -->
+      <div class="card">
+        <h2>Account</h2>
+
+        <div class="card-row">
+          <span class="card-label">Plan</span>
+          <span class="card-value" id="plan-text">Free</span>
+        </div>
+        <div class="card-row" id="trial-row" style="display:none;">
+          <span class="card-label">Trial ends</span>
+          <span class="card-value" id="trial-end-text">—</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" id="upgrade-btn">Upgrade to Pro</button>
+          <a class="btn btn-secondary hidden" id="manage-btn" href="https://billing.stripe.com/p/login/cNiaEPh0B3pj3S39tf14400" target="_blank" rel="noopener">Manage subscription</a>
+        </div>
+      </div>
+
+      <!-- Change password -->
+      <div class="card">
+        <h2>Change password</h2>
+        <label for="new-password">New password</label>
+        <input type="password" id="new-password" placeholder="At least 6 characters" autocomplete="new-password" />
+        <button class="btn btn-secondary" id="change-pw-btn">Update password</button>
+        <div class="status" id="pw-status"></div>
+      </div>
+
+      <p class="small text-center" style="margin-top:24px;">
+        Need help? <a href="https://api.eli5.it.com/api/support" target="_blank" style="color:var(--purple);">Contact support</a>
+      </p>
+
+    </section>
+
+  </div>
+
+<script>
+  const SUPABASE_URL  = 'https://khoamykwwsoflfpvcnxx.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtob2FteWt3d3NvZmxmcHZjbnh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NTA2MTYsImV4cCI6MjA5MjEyNjYxNn0.Ix-18755M4fSc3s8vu89uHLHEUTBPM-DY1kaSIdmmtk';
+  const BACKEND_URL   = 'https://api.eli5.it.com';
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/cNiaEPh0B3pj3S39tf14400';
+
+  // ── Elements ──
+  const authView      = document.getElementById('auth-view');
+  const loggedInView  = document.getElementById('logged-in-view');
+  const tabLogin      = document.getElementById('tab-login');
+  const tabSignup     = document.getElementById('tab-signup');
+  const emailInput    = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const submitBtn     = document.getElementById('submit-btn');
+  const forgotLink    = document.getElementById('forgot-link');
+  const authStatus    = document.getElementById('auth-status');
+
+  const accountEmail  = document.getElementById('account-email');
+  const planBadge     = document.getElementById('plan-badge');
+  const planText      = document.getElementById('plan-text');
+  const trialRow      = document.getElementById('trial-row');
+  const trialEndText  = document.getElementById('trial-end-text');
+  const upgradeBtn    = document.getElementById('upgrade-btn');
+  const manageBtn     = document.getElementById('manage-btn');
+  const logoutBtn     = document.getElementById('logout-btn');
+
+  const modeToggle    = document.getElementById('mode-toggle');
+  const modeShortBtn  = document.getElementById('mode-short');
+  const modeExpBtn    = document.getElementById('mode-expanded');
+  const textInput     = document.getElementById('text-input');
+  const explainBtn    = document.getElementById('explain-btn');
+  const explainStatus = document.getElementById('explain-status');
+  const usesRemEl     = document.getElementById('uses-remaining');
+  const resultBox     = document.getElementById('result-box');
+
+  const newPwInput    = document.getElementById('new-password');
+  const changePwBtn   = document.getElementById('change-pw-btn');
+  const pwStatus      = document.getElementById('pw-status');
+
+  let mode = 'login';        // 'login' or 'signup'
+  let currentMode = 'short'; // 'short' or 'expanded'
+  let isProUser = false;
+
+  // ── Storage helpers (localStorage on web, no chrome.storage) ──
+  const getJwt   = () => localStorage.getItem('eli5_jwt');
+  const getEmail = () => localStorage.getItem('eli5_email');
+  const setSession = (jwt, email) => {
+    localStorage.setItem('eli5_jwt', jwt);
+    localStorage.setItem('eli5_email', email);
+  };
+  const clearSession = () => {
+    localStorage.removeItem('eli5_jwt');
+    localStorage.removeItem('eli5_email');
+  };
+
+  // ── On load ──
+  if (getJwt() && getEmail()) {
+    fetchAndShowProfile(getEmail(), getJwt());
+  }
+
+  // ── Tab switching ──
+  tabLogin.addEventListener('click', () => {
+    mode = 'login';
+    tabLogin.classList.add('active');
+    tabSignup.classList.remove('active');
+    submitBtn.textContent = 'Log In';
+    clearStatus(authStatus);
+  });
+  tabSignup.addEventListener('click', () => {
+    mode = 'signup';
+    tabSignup.classList.add('active');
+    tabLogin.classList.remove('active');
+    submitBtn.textContent = 'Create Account';
+    clearStatus(authStatus);
+  });
+
+  // ── Submit (login or signup) ──
+  submitBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      showStatus(authStatus, 'Please enter your email and password.', 'error');
+      return;
+    }
+    submitBtn.disabled = true;
+    showStatus(authStatus, mode === 'login' ? 'Logging in…' : 'Creating account…', 'info');
+    try {
+      if (mode === 'signup') await handleSignup(email, password);
+      else await handleLogin(email, password);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  async function handleSignup(email, password) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showStatus(authStatus, data.error_description || data.msg || 'Sign up failed. Try again.', 'error');
+      return;
+    }
+    if (data.access_token) {
+      setSession(data.access_token, email);
+      await fetchAndShowProfile(email, data.access_token);
+    } else {
+      showStatus(authStatus, 'Account created! Check your email to confirm, then log in.', 'success');
+    }
+  }
+
+  async function handleLogin(email, password) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showStatus(authStatus, data.error_description || data.msg || 'Login failed. Check your email and password.', 'error');
+      return;
+    }
+    setSession(data.access_token, email);
+    await fetchAndShowProfile(email, data.access_token);
+  }
+
+  // ── Forgot password ──
+  forgotLink.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (!email) {
+      showStatus(authStatus, 'Enter your email address first.', 'error');
+      return;
+    }
+    showStatus(authStatus, 'Sending reset email…', 'info');
+    const redirectTo = encodeURIComponent('https://api.eli5.it.com/api/reset-password');
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/recover?redirect_to=${redirectTo}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ email, gotrue_meta_security: {} }),
+    });
+    if (res.ok) showStatus(authStatus, 'Reset email sent — check your inbox.', 'success');
+    else showStatus(authStatus, 'Could not send reset email. Try again.', 'error');
+  });
+
+  // ── Profile fetch + render logged-in view ──
+  async function fetchAndShowProfile(email, jwt) {
+    try {
+      const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': SUPABASE_ANON },
+      });
+      if (!userRes.ok) {
+        clearSession();
+        showStatus(authStatus, 'Session expired. Please log in again.', 'error');
+        return;
+      }
+      const user = await userRes.json();
+
+      const profileRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}&select=subscription_status,trial_ends_at`,
+        { headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': SUPABASE_ANON } }
+      );
+      const [profile] = await profileRes.json();
+
+      const isPro       = profile?.subscription_status === 'pro';
+      const trialEndsAt = profile?.trial_ends_at ? new Date(profile.trial_ends_at) : null;
+      const isInTrial   = trialEndsAt && trialEndsAt > new Date();
+
+      if (isPro) {
+        showLoggedIn(email, 'pro', null);
+      } else if (isInTrial) {
+        const daysLeft = Math.ceil((trialEndsAt - new Date()) / (1000*60*60*24));
+        showLoggedIn(email, 'trial', daysLeft, trialEndsAt);
+      } else {
+        showLoggedIn(email, 'free', null);
+      }
+    } catch {
+      showStatus(authStatus, 'Something went wrong. Try again.', 'error');
+    }
+  }
+
+  function showLoggedIn(email, plan, trialDaysLeft, trialEndsAt) {
+    authView.classList.add('hidden');
+    loggedInView.classList.remove('hidden');
+    accountEmail.textContent = email;
+    isProUser = (plan === 'pro' || plan === 'trial');
+
+    if (plan === 'pro') {
+      planBadge.textContent = 'Pro';
+      planBadge.className = 'plan-badge pro';
+      planText.textContent = 'Pro — unlimited explanations';
+      trialRow.style.display = 'none';
+      upgradeBtn.classList.add('hidden');
+      manageBtn.classList.remove('hidden');
+    } else if (plan === 'trial') {
+      planBadge.textContent = `Trial · ${trialDaysLeft}d left`;
+      planBadge.className = 'plan-badge trial';
+      planText.textContent = `Trial — ${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left`;
+      if (trialEndsAt) {
+        trialRow.style.display = 'flex';
+        trialEndText.textContent = trialEndsAt.toLocaleDateString();
+      }
+      upgradeBtn.classList.remove('hidden');
+      manageBtn.classList.add('hidden');
+    } else {
+      planBadge.textContent = 'Free';
+      planBadge.className = 'plan-badge free';
+      planText.textContent = 'Free — 10 explanations / month';
+      trialRow.style.display = 'none';
+      upgradeBtn.classList.remove('hidden');
+      manageBtn.classList.add('hidden');
+    }
+
+    // Mode toggle only for pro/trial
+    if (isProUser) modeToggle.classList.remove('hidden');
+    else modeToggle.classList.add('hidden');
+  }
+
+  // ── Mode toggle ──
+  modeShortBtn.addEventListener('click', () => {
+    currentMode = 'short';
+    modeShortBtn.classList.add('active');
+    modeExpBtn.classList.remove('active');
+  });
+  modeExpBtn.addEventListener('click', () => {
+    currentMode = 'expanded';
+    modeExpBtn.classList.add('active');
+    modeShortBtn.classList.remove('active');
+  });
+
+  // ── Web simplify (the main thing) ──
+  explainBtn.addEventListener('click', async () => {
+    const text = textInput.value.trim();
+    if (!text) {
+      showStatus(explainStatus, 'Paste some text first.', 'error');
+      return;
+    }
+    const jwt = getJwt();
+    if (!jwt) {
+      showStatus(explainStatus, 'Please log in again.', 'error');
+      return;
+    }
+
+    explainBtn.disabled = true;
+    explainBtn.textContent = 'Thinking…';
+    clearStatus(explainStatus);
+    resultBox.classList.add('hidden');
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/simplify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ text, mode: currentMode }),
+      });
+      const data = await res.json();
+
+      if (res.status === 401) {
+        clearSession();
+        location.reload();
+        return;
+      }
+
+      if (!res.ok) {
+        if (data.error === 'free_limit_reached') {
+          showStatus(explainStatus, data.message || 'Free limit reached this month. Upgrade for unlimited.', 'error');
+          updateUsesRemaining(0);
+        } else {
+          showStatus(explainStatus, data.error || 'Something went wrong. Try again.', 'error');
+        }
+        return;
+      }
+
+      resultBox.textContent = data.result;
+      resultBox.classList.remove('hidden');
+
+      if (data.usesRemaining !== null && data.usesRemaining !== undefined && !data.isPro) {
+        updateUsesRemaining(data.usesRemaining);
+      } else {
+        usesRemEl.classList.add('hidden');
+      }
+
+      if (data.trialJustExpired) {
+        showStatus(explainStatus, 'Your 7-day trial just ended. You\'re on the free plan now.', 'info');
+      }
+    } catch {
+      showStatus(explainStatus, 'Network error. Check your connection and try again.', 'error');
+    } finally {
+      explainBtn.disabled = false;
+      explainBtn.textContent = 'Explain Simply';
+    }
+  });
+
+  function updateUsesRemaining(n) {
+    usesRemEl.classList.remove('hidden');
+    usesRemEl.textContent = `${n} of 10 explanations remaining this month`;
+    usesRemEl.classList.remove('warn', 'danger');
+    if (n <= 2) usesRemEl.classList.add('danger');
+    else if (n <= 4) usesRemEl.classList.add('warn');
+  }
+
+  // ── Upgrade ──
+  upgradeBtn.addEventListener('click', () => {
+    const email = getEmail();
+    const url = email ? `${STRIPE_PAYMENT_LINK}?prefilled_email=${encodeURIComponent(email)}` : STRIPE_PAYMENT_LINK;
+    window.open(url, '_blank');
+  });
+
+  // ── Change password ──
+  changePwBtn.addEventListener('click', async () => {
+    const newPw = newPwInput.value;
+    if (!newPw || newPw.length < 6) {
+      showStatus(pwStatus, 'Password must be at least 6 characters.', 'error');
+      return;
+    }
+    const jwt = getJwt();
+    if (!jwt) {
+      showStatus(pwStatus, 'Please log in again.', 'error');
+      return;
+    }
+    changePwBtn.disabled = true;
+    showStatus(pwStatus, 'Updating…', 'info');
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`,
+          'apikey': SUPABASE_ANON,
+        },
+        body: JSON.stringify({ password: newPw }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showStatus(pwStatus, data.error_description || data.msg || 'Could not update password.', 'error');
+        return;
+      }
+      newPwInput.value = '';
+      showStatus(pwStatus, 'Password updated.', 'success');
+    } catch {
+      showStatus(pwStatus, 'Network error. Try again.', 'error');
+    } finally {
+      changePwBtn.disabled = false;
+    }
+  });
+
+  // ── Logout ──
+  logoutBtn.addEventListener('click', () => {
+    clearSession();
+    loggedInView.classList.add('hidden');
+    authView.classList.remove('hidden');
+    emailInput.value = '';
+    passwordInput.value = '';
+    textInput.value = '';
+    resultBox.classList.add('hidden');
+    usesRemEl.classList.add('hidden');
+    clearStatus(authStatus);
+    clearStatus(explainStatus);
+    clearStatus(pwStatus);
+  });
+
+  // ── Helpers ──
+  function showStatus(el, msg, type) {
+    el.textContent = msg;
+    el.className = 'status ' + (type || '');
+  }
+  function clearStatus(el) {
+    el.textContent = '';
+    el.className = 'status';
+  }
+</script>
+
+</body>
+</html>
